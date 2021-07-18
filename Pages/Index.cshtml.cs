@@ -26,6 +26,9 @@ namespace PavluqueOrderGenerator.Pages
 
         public void OnPost(Order order)
         {
+            var request = Request;
+            var btn = Request.Form["Button"];
+
             Console.WriteLine("Yes");
             Console.ReadLine();
         }
