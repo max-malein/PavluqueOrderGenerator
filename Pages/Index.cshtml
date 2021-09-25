@@ -10,11 +10,11 @@
         <form class="m-1" method="post">
             <div class="row mb-3">
                 <div class="col-4">
-                    <input type="text" placeholder="Артикул" class="form-control" name="Sku">
+                    <input type="text" placeholder="Артикул" class="form-control" name="Orders[0].Skus">
                 </div>
 
                 <div class="col">
-                    <select class="form-select" aria-label="Default select example" name="Type">
+                    <select class="form-select" aria-label="Default select example" name="Orders[0].Types">
                         <option selected>Наименование</option>
                         <option>Купальник Сгущенка</option>
                         <option>Купальник Газировка</option>
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="col-2">
-                    <select class="form-select" aria-label="Default select example" name="Size">
+                    <select class="form-select" aria-label="Default select example" name="Orders[0].Sizes">
                         <option selected>Размер</option>
                         <option>XS</option>
                         <option>S</option>
@@ -32,13 +32,46 @@
                 </div>
 
                 <div class="col-1">
-                    <input type="number" class="form-control" value="1" name="Quantity"/>
+                    <input type="number" class="form-control" value="1" name="Orders[0].Quantities" />
                 </div>
 
                 <div class="col-1" name="Button">
                     buttons
                 </div>
             </div>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <input type="text" placeholder="Артикул" class="form-control" name="Orders[1].Skus">
+                </div>
+
+                <div class="col">
+                    <select class="form-select" aria-label="Default select example" name="Orders[1].Types">
+                        <option selected>Наименование</option>
+                        <option>Купальник Сгущенка</option>
+                        <option>Купальник Газировка</option>
+                        <option>Купальник Молоко</option>
+                    </select>
+                </div>
+
+                <div class="col-2">
+                    <select class="form-select" aria-label="Default select example" name="Orders[1].Sizes">
+                        <option selected>Размер</option>
+                        <option>XS</option>
+                        <option>S</option>
+                        <option>M</option>
+                    </select>
+                </div>
+
+                <div class="col-1">
+                    <input type="number" class="form-control" value="1" name="Orders[1].Quantities" asp-for="Orders[0].Quantity" />
+                </div>
+
+                <div class="col-1" name="Button">
+                    buttons
+                </div>
+            </div>
+
             <div class="row mt-5">
                 <div class="col">
                     <button type="submit" class="btn btn-primary" name="button" value="CreateOrder">Создать заказ</button>
