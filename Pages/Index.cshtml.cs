@@ -17,13 +17,18 @@ namespace PavluqueOrderGenerator.Pages
         private PavluqueContext context;
         public string Message { get; set; }
 
+        public string[] ProductNames => context.Products.OrderBy(p => p.SKU).Select(p => p.Name).ToArray();
+
         [BindProperty]
+        [FromForm]
         public Order[] Orders { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, PavluqueContext context)
         {
             _logger = logger;
             this.context = context;
+
+
         }
 
         public void OnGet()
@@ -86,6 +91,7 @@ namespace PavluqueOrderGenerator.Pages
             context.SaveChanges();
         }
 
+        
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
@@ -95,6 +101,8 @@ namespace PavluqueOrderGenerator.Pages
             var btn = Request.Form["Button"];
 
             Console.WriteLine("Yes");
+
+            var order = Orders[0];
 
             Console.ReadLine();
 

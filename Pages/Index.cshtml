@@ -6,71 +6,40 @@
 
 <div>
     <h1 class="display-4">Welcome</h1>
-    <div id="products">        
+    <div id="products">
         <form class="m-1" method="post">
-            <div class="row mb-3">
-                <div class="col-4">
-                    <input type="text" placeholder="Артикул" class="form-control" name="Orders[0].Skus">
-                </div>
+            <div id="inputRows">
+                <div class="row mb-3" name="0">
+                    <div class="col-4">
+                        <input type="text" placeholder="Артикул" class="form-control" name="Orders[0].Sku">
+                    </div>
 
-                <div class="col">
-                    <select class="form-select" aria-label="Default select example" name="Orders[0].Types">
-                        <option selected>Наименование</option>
-                        <option>Купальник Сгущенка</option>
-                        <option>Купальник Газировка</option>
-                        <option>Купальник Молоко</option>
-                    </select>
-                </div>
+                    <div class="col">
+                        <select asp-items=@(new SelectList(Model.ProductNames)) onchange="selectProductName(this)" class="form-select" aria-label="Default select example" name="Orders[0].Type">
+                            <option selected>Наименование</option>
+                        </select>
+                    </div>
 
-                <div class="col-2">
-                    <select class="form-select" aria-label="Default select example" name="Orders[0].Sizes">
-                        <option selected>Размер</option>
-                        <option>XS</option>
-                        <option>S</option>
-                        <option>M</option>
-                    </select>
-                </div>
+                    <div class="col-2">
+                        <select class="form-select" aria-label="Default select example" name="Orders[0].Size">
+                            <option selected>Размер</option>
+                            <option>XS</option>
+                            <option>S</option>
+                            <option>M</option>
+                        </select>
+                    </div>
 
-                <div class="col-1">
-                    <input type="number" class="form-control" value="1" name="Orders[0].Quantities" />
-                </div>
+                    <div class="col-1">
+                        <input type="number" class="form-control" value="1" name="Orders[0].Quantity" />
+                    </div>
 
-                <div class="col-1" name="Button">
-                    buttons
+                    <div class="col-1" name="Button">
+                        <button type="button" class="btn btn-outline-primary" onclick="createRow(this)">+</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-4">
-                    <input type="text" placeholder="Артикул" class="form-control" name="Orders[1].Skus">
-                </div>
 
-                <div class="col">
-                    <select class="form-select" aria-label="Default select example" name="Orders[1].Types">
-                        <option selected>Наименование</option>
-                        <option>Купальник Сгущенка</option>
-                        <option>Купальник Газировка</option>
-                        <option>Купальник Молоко</option>
-                    </select>
-                </div>
-
-                <div class="col-2">
-                    <select class="form-select" aria-label="Default select example" name="Orders[1].Sizes">
-                        <option selected>Размер</option>
-                        <option>XS</option>
-                        <option>S</option>
-                        <option>M</option>
-                    </select>
-                </div>
-
-                <div class="col-1">
-                    <input type="number" class="form-control" value="1" name="Orders[1].Quantities" asp-for="Orders[0].Quantity" />
-                </div>
-
-                <div class="col-1" name="Button">
-                    buttons
-                </div>
-            </div>
 
             <div class="row mt-5">
                 <div class="col">
@@ -84,6 +53,12 @@
     </div>
 
     <h1>@Model.Message</h1>
-    
-    
+
+
 </div>
+
+@section Scripts
+{
+    <script src="~/js/selectController.js"></script>
+
+}
