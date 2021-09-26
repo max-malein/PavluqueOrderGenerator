@@ -1,6 +1,9 @@
 ﻿console.log("loaded!")
-var sizesPromise = fetch('/Index?handler=sizes')
+var productsPromise = fetch('/Index?handler=sizes')
     .then(response => response.json())
+
+// добавить события для первого ряда
+addInputChangeListeners(document.querySelector('#inputRows > div'))
 
 function createRow(button) {
     let row = button.parentNode.parentNode
@@ -13,6 +16,8 @@ function createRow(button) {
 
         setRowIndex(newRow, 1 + rIndex)
         button.innerHTML = "-"
+
+        addInputChangeListeners(newRow)
 
         row.parentNode.append(newRow)
     }
@@ -38,7 +43,8 @@ function setRowIndex(row, index) {
 function selectProductName(select) {
     let selection = select.options[select.selectedIndex].text
     let sizeElement = select.parentNode.nextElementSibling.getElementsByTagName('select')[0]
-    let size = sizesPromise.then(sz => {
+
+    let size = productsPromise.then(sz => {
         sizeArr = sz.filter(o => o.name == selection)[0].sizes
         setSizes(sizeElement, sizeArr)
     })
@@ -74,6 +80,64 @@ function increaseNameIndexes(row) {
     row.innerHTML = html.replace(replacePattern, row.dataset.rowindex)
 }
 
-function testfunc() {
-    console.log('shit')
+
+
+function updateSku(event) {
+    console.log('inside updateSku event')
+    let row = event.currentTarget.closest('.input-row')
+    let productName = row.querySelector('.product-name').value
+    let qty = row.querySelector('.product-quantity').value
+    let size = row.querySelector('.product-size').value
+
+    let priceInput = row.querySelector('.product-price')
+    let skuInput = row.querySelector('.product-sku')
+
+    productsPromise.then(prods => {
+        let product = prods.filter(p => p.name == productName)[0]
+
+        if (size == "Размер") {
+            size = ""
+        }
+
+        let sku = ""
+        let price = ""
+        if (product != null) {
+            sku = product.sku + '-' + size
+            price = product.price
+        }
+        
+        skuInput.value = sku
+        priceInput.value = price
+    })
+}
+
+function onSkuUpdate(event) {
+    let input = event.currentTarget
+    // тип изделия
+    const pattern = /(^\d{5})(-(\w*)$)?/m;
+    let match = input.value.match(pattern)
+    if (match != null && match[1]) {
+        console.log(match[1])
+        productsPromise.then(prods => {
+            let product = prods.filter(p => p.sku == match[1])[0]
+            if (product) {
+                let prodInput = input.closest('.input-row').querySelector('.product-name');
+                for (let i = 0; i < prodInput.options.length; i++) {
+                    if (prodInput.options[i].text == product.name) {
+                        prodInput.selectedIndex = i
+                        break
+                    }
+                }
+            }
+        })
+    }
+}
+
+
+function addInputChangeListeners(row) {
+    row.querySelector('.product-sku').addEventListener('input', onSkuUpdate)
+    let elements = row.getElementsByClassName('product-input')
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].addEventListener('change', updateSku)
+    }
 }
