@@ -112,7 +112,7 @@ namespace PavluqueOrderGenerator.Pages
 
         public IActionResult OnGetSizes()
         {
-            var prods = context.Products.ToDictionary(p => p.Name, p => p.Sizes);
+            var prods = context.Products.ToArray();
 
             return new OkObjectResult(prods);
         }
