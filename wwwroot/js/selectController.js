@@ -1,4 +1,16 @@
 ﻿console.log("loaded!")
+//var sizes = async () => {
+//    let response = await fetch("/Index?handler=sizes")
+//    if (!response.ok) {
+//        console.error("не удалось прочитать список размеров")
+//        return null
+//    }
+
+//    let result = await response.json()
+//    return result
+//}
+var sizesPromise = fetch('/Index?handler=sizes')
+    .then(response => response.json())
 
 function createRow(button) {
     let row = button.parentNode.parentNode
@@ -23,13 +35,39 @@ function createRow(button) {
         console.debug(rows.lenth)
     
     }
-    
 }
 
 function selectProductName(select) {
-    var selection = select.options[select.selectedIndex].text
-    console.debug(selection)
+    let selection = select.options[select.selectedIndex].text
+    let sizeElement = select.parentNode.nextElementSibling.getElementsByTagName('select')[0]
+    let size = sizesPromise.then(sz => {
+        sizeArr = sz[selection]
+        setSizes(sizeElement, sizeArr)
+    })
+}
 
+function setSizes(element, selectOptions) {
+    console.dir(element)
+    console.dir(selectOptions)
+    let currentSize = element.options[element.selectedIndex].text
+
+    // удалить текущие опции
+    if (element.options.length > 1) {
+        for (let i = element.options.length - 1; i > 0; --i) {
+            element.options[i].remove()
+        }
+    }
+
+    // установить новые опции
+    for (let op of selectOptions) {
+        let option = new Option(op)
+        element.options.add(option)
+
+        // сохранить установленный размер по возможности
+        if (currentSize == op) {
+            element.selectedIndex = option.index
+        }
+    }
 }
 
 function increaseNameIndexes(row) {

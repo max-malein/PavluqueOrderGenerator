@@ -16,6 +16,7 @@ namespace PavluqueOrderGenerator.Pages
         private readonly ILogger<IndexModel> _logger;
         private PavluqueContext context;
         public string Message { get; set; }
+        public string SizeLink => "~/Index?handler=sizes";
 
         public string[] ProductNames => context.Products.OrderBy(p => p.SKU).Select(p => p.Name).ToArray();
 
@@ -107,6 +108,13 @@ namespace PavluqueOrderGenerator.Pages
             Console.ReadLine();
 
             return new OkResult();
+        }
+
+        public IActionResult OnGetSizes()
+        {
+            var prods = context.Products.ToDictionary(p => p.Name, p => p.Sizes);
+
+            return new OkObjectResult(prods);
         }
     }
 }
