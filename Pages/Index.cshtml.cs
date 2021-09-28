@@ -110,6 +110,17 @@ namespace PavluqueOrderGenerator.Pages
             return new OkResult();
         }
 
+        public IActionResult OnPostStickers()
+        {
+            if (!ModelState.IsValid)
+                return Page();
+
+            var stream = BarcodeGenerator.ExcelWriter.SaveBarcodes(@"E:\Repos\PavluqueOrderGenerator\Model\Barcode\Templates\templateRound.xlsx", Orders);
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "barcodes.xlsx");
+
+            return new OkResult();
+        }
+
         public IActionResult OnGetSizes()
         {
             var prods = context.Products.ToArray();

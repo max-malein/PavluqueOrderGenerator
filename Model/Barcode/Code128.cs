@@ -8,7 +8,7 @@ namespace BarcodeGenerator
 {
     class Code128
     {
-        public string Encode(string content)
+        public static string Encode(string content)
         {
             char start = (char)204;
             char stop = (char)206;
@@ -17,7 +17,7 @@ namespace BarcodeGenerator
             return start + content + sum + stop;
         }
 
-        private char GetCheckSum(string content)
+        private static char GetCheckSum(string content)
         {
             int sum = 104;
             for (int i = 0; i < content.Length; i++)
@@ -29,7 +29,7 @@ namespace BarcodeGenerator
             return DecodeToAscii(modulSum);
         }
 
-        private char DecodeToAscii(int modulSum)
+        private static char DecodeToAscii(int modulSum)
         {
             if (modulSum == 0)
                 return (char)194;
@@ -39,7 +39,7 @@ namespace BarcodeGenerator
                 return (char)(modulSum + 100);
         }
 
-        private int CodeValueForChar(int CharAscii)
+        private static int CodeValueForChar(int CharAscii)
         {
             return (CharAscii >= 32) ? CharAscii - 32 : CharAscii + 64;
         }
