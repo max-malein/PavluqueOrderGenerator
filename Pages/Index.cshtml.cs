@@ -115,10 +115,15 @@ namespace PavluqueOrderGenerator.Pages
             if (!ModelState.IsValid)
                 return Page();
 
-            var stream = BarcodeGenerator.ExcelWriter.SaveBarcodes(@"E:\Repos\PavluqueOrderGenerator\Model\Barcode\Templates\templateRound.xlsx", Orders);
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "barcodes.xlsx");
+            var file = BarcodeGenerator.ExcelWriter.SaveBarcodes(@"E:\Repos\PavluqueOrderGenerator\Model\Barcode\Templates\templateRound.xlsx", Orders);
+            var bytes = System.IO.File.ReadAllBytes(file.FullName);
+            file.Delete();
+            //return File(buffer, "application/octet-stream", "fuckyou.xlsx");
+            //var outputFile =  PhysicalFile(file.FullName, "application/vnd.ms-excel", "stickers.xlsx");
+            var outputFile = File(bytes, "application/vnd.ms-excel", "stickers.xlsx");
 
-            return new OkResult();
+            //file.Delete();
+            return outputFile;
         }
 
         public IActionResult OnGetSizes()

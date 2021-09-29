@@ -17,7 +17,7 @@ namespace BarcodeGenerator
         internal void CreateFile(List<Product> productData)
         { }
 
-        public static Stream SaveBarcodes(string fileName, Order[] productData)
+        public static FileInfo SaveBarcodes(string fileName, Order[] productData)
         {
             // If you use EPPlus in a noncommercial context
             // according to the Polyform Noncommercial license:
@@ -46,11 +46,12 @@ namespace BarcodeGenerator
                 NextCell(ref row, ref col);
             }
             //p.SaveAs(new FileInfo(saveAsPath));
+            
+            var finfo = new FileInfo(System.IO.Path.GetTempFileName());
+            p.SaveAs(finfo);
+            return finfo;
 
-            Stream stream = new MemoryStream();
-            p.SaveAs(stream);
-
-            return stream;
+            //return p.Stream;
             //p.Save();
         }
 
