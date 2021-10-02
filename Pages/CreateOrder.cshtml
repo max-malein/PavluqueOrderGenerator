@@ -1,0 +1,70 @@
+﻿@page
+@model CreateOrderModel
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<div>
+    <h1 class="display-4 mb-4">Оформление заказа</h1>
+    <div id="products">
+        <form class="m-1" method="post">
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+            <p class="mb-2 fs-5">Номер заказа</p>
+            <div class="mb-5 col-1">                
+                <input type="number" class="form-control" placeholder="Номер заказа." name="OrderId" value="1"/>
+            </div>
+            <div id="inputRows">
+                <div class="row mb-3 input-row" data-rowindex="0">
+                    <div class="col-2">
+                        <input type="text" placeholder="Артикул" class="form-control product-sku" name="Orders[0].Sku">
+                    </div>
+
+                    <div class="col">
+                        <select asp-items=@(new SelectList(Model.ProductNames)) onchange="selectProductName(this)" class="form-select product-name product-input" aria-label="Default select example" name="Orders[0].Type">
+                            <option selected>Наименование</option>
+                        </select>
+                    </div>
+
+                    <div class="col-2">
+                        <select class="form-select product-size product-input" aria-label="Default select example" name="Orders[0].Size">
+                            <option selected>Размер</option>
+                        </select>
+                    </div>
+
+                    <div class="col-2">
+                        <input type="number" placeholder="Цена" class="form-control product-price" name="Orders[0].Price">
+                    </div>
+
+                    <div class="col-1">
+                        <input type="number" class="form-control product-quantity product-input" value="1" name="Orders[0].Quantity" />
+                    </div>
+
+                    <div class="col-1">
+                        <button type="button" class="btn btn-outline-primary" onclick="createRow(this)">+</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row mt-5">
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary" name="button" value="CreateOrder">Скачать заказ</button>
+                </div>
+                <div class="col">
+                    <button type="submit" asp-page-handler="Stickers" class="btn btn-primary" name="button" value="Stickers">Скачать наклейки</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <h1>@Model.Message</h1>
+
+
+</div>
+
+@section Scripts
+{  
+    <script src="~/js/selectController.js"></script>
+
+}

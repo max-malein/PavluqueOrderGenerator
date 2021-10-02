@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PavluqueOrderGenerator;
@@ -9,9 +10,10 @@ using PavluqueOrderGenerator;
 namespace PavluqueOrderGenerator.Migrations
 {
     [DbContext(typeof(PavluqueContext))]
-    partial class PavluqueContextModelSnapshot : ModelSnapshot
+    [Migration("20211002202303_Renamed_Order_To_Orders")]
+    partial class Renamed_Order_To_Orders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -10,20 +10,20 @@ using PavluqueOrderGenerator.Model;
 
 namespace PavluqueOrderGenerator.Pages
 {
-    public class IndexModel : PageModel
+    public class ListOrderModel : PageModel
     {
         private readonly PavluqueOrderGenerator.PavluqueContext _context;
 
-        public IndexModel(PavluqueOrderGenerator.PavluqueContext context)
+        public ListOrderModel(PavluqueOrderGenerator.PavluqueContext context)
         {
             _context = context;
         }
 
-        public IList<Order> SavedOrder { get;set; }
+        public IList<OrderItem> Order { get;set; }
 
         public async Task OnGetAsync()
         {
-            SavedOrder = await _context.Orders.ToListAsync();
+            Order = await _context.OrderItems.ToListAsync();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PavluqueOrderGenerator;
@@ -9,9 +10,10 @@ using PavluqueOrderGenerator;
 namespace PavluqueOrderGenerator.Migrations
 {
     [DbContext(typeof(PavluqueContext))]
-    partial class PavluqueContextModelSnapshot : ModelSnapshot
+    [Migration("20211002173917_AddedSavedOrders")]
+    partial class AddedSavedOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,45 +21,15 @@ namespace PavluqueOrderGenerator.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("OrderOrderItem", b =>
-                {
-                    b.Property<string>("OrdersSku")
-                        .HasColumnType("text");
-
-                    b.Property<int>("SavedOrdersId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("OrdersSku", "SavedOrdersId");
-
-                    b.HasIndex("SavedOrdersId");
-
-                    b.ToTable("OrderOrderItem");
-                });
-
             modelBuilder.Entity("PavluqueOrderGenerator.Model.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("LastEdited")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("PavluqueOrderGenerator.Model.OrderItem", b =>
                 {
                     b.Property<string>("Sku")
                         .HasColumnType("text");
 
                     b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("SavedOrderId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Size")
@@ -68,7 +40,9 @@ namespace PavluqueOrderGenerator.Migrations
 
                     b.HasKey("Sku");
 
-                    b.ToTable("OrderItems");
+                    b.HasIndex("SavedOrderId");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("PavluqueOrderGenerator.Model.Product", b =>
@@ -132,19 +106,29 @@ namespace PavluqueOrderGenerator.Migrations
                     b.ToTable("ProductTypes");
                 });
 
-            modelBuilder.Entity("OrderOrderItem", b =>
+            modelBuilder.Entity("PavluqueOrderGenerator.Model.SavedOrder", b =>
                 {
-                    b.HasOne("PavluqueOrderGenerator.Model.OrderItem", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersSku")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.HasOne("PavluqueOrderGenerator.Model.Order", null)
-                        .WithMany()
-                        .HasForeignKey("SavedOrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("LastEdited")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SavedOrders");
+                });
+
+            modelBuilder.Entity("PavluqueOrderGenerator.Model.Order", b =>
+                {
+                    b.HasOne("PavluqueOrderGenerator.Model.SavedOrder", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("SavedOrderId");
                 });
 
             modelBuilder.Entity("PavluqueOrderGenerator.Model.Product", b =>
@@ -170,6 +154,11 @@ namespace PavluqueOrderGenerator.Migrations
             modelBuilder.Entity("PavluqueOrderGenerator.Model.ProductType", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("PavluqueOrderGenerator.Model.SavedOrder", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

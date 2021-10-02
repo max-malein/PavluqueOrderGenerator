@@ -1,5 +1,5 @@
 ﻿console.log("loaded!")
-var productsPromise = fetch('/Index?handler=sizes')
+var productsPromise = fetch('/CreateOrder?handler=sizes')
     .then(response => response.json())
 
 // добавить события для первого ряда

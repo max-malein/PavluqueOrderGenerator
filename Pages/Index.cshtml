@@ -1,66 +1,42 @@
 ﻿@page
-@model IndexModel
+@model PavluqueOrderGenerator.Pages.IndexModel
+
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Index";
 }
 
-<div>
-    <h1 class="display-4">Welcome</h1>
-    <div id="products">
-        <form class="m-1" method="post">
-            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-            <div id="inputRows">
-                <div class="row mb-3 input-row" data-rowindex="0">
-                    <div class="col-2">
-                        <input type="text" placeholder="Артикул" class="form-control product-sku" name="Orders[0].Sku">
-                    </div>
+<h1>Index</h1>
 
-                    <div class="col">
-                        <select asp-items=@(new SelectList(Model.ProductNames)) onchange="selectProductName(this)" class="form-select product-name product-input" aria-label="Default select example" name="Orders[0].Type">
-                            <option selected>Наименование</option>
-                        </select>
-                    </div>
-
-                    <div class="col-2">
-                        <select class="form-select product-size product-input" aria-label="Default select example" name="Orders[0].Size">
-                            <option selected>Размер</option>
-                        </select>
-                    </div>
-
-                    <div class="col-2">
-                        <input type="number" placeholder="Цена" class="form-control product-price" name="Orders[0].Price">
-                    </div>
-
-                    <div class="col-1">
-                        <input type="number" class="form-control product-quantity product-input" value="1" name="Orders[0].Quantity" />
-                    </div>
-
-                    <div class="col-1">
-                        <button type="button" class="btn btn-outline-primary" onclick="createRow(this)">+</button>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="row mt-5">
-                <div class="col">
-                    <button type="submit" class="btn btn-primary" name="button" value="CreateOrder">Создать заказ</button>
-                </div>
-                <div class="col">
-                    <button type="submit" asp-page-handler="Stickers" class="btn btn-primary" name="button" value="Stickers">Скачать наклейки</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <h1>@Model.Message</h1>
-
-
-</div>
-
-@section Scripts
-{  
-    <script src="~/js/selectController.js"></script>
-
+<p>
+    <a asp-page="CreateOrder">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SavedOrder[0].DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SavedOrder[0].LastEdited)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.SavedOrder) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastEdited)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
 }
+    </tbody>
+</table>

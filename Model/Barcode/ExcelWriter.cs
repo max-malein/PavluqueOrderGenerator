@@ -17,7 +17,7 @@ namespace BarcodeGenerator
         internal void CreateFile(List<Product> productData)
         { }
 
-        public static FileInfo SaveBarcodes(string fileName, Order[] productData)
+        public static FileInfo SaveBarcodes(string fileName, OrderItem[] productData)
         {
             // If you use EPPlus in a noncommercial context
             // according to the Polyform Noncommercial license:
@@ -28,7 +28,7 @@ namespace BarcodeGenerator
             ExcelWorksheet myWorksheet = p.Workbook.Worksheets["Лист1"];
             var row = 1;
             var col = 1;
-            foreach (Order product in productData)
+            foreach (OrderItem product in productData)
             {
                 //myWorksheet.Cells[row, col].Value = product.ProductName;
                 //myWorksheet.Cells[row + 1, col].Value = "Размер - " + product.Size;
@@ -68,14 +68,14 @@ namespace BarcodeGenerator
             }
         }
 
-        public static void SaveOrder(string fileName, string saveAsPath, List<Order> productData)
+        public static void SaveOrder(string fileName, string saveAsPath, List<OrderItem> productData)
         {
 
             FileInfo fileInfo = new FileInfo(fileName);
             ExcelPackage p = new ExcelPackage(fileInfo);
             ExcelWorksheet myWorksheet = p.Workbook.Worksheets["Заказ"];
             var row = 2;            
-            foreach (Order product in productData)
+            foreach (OrderItem product in productData)
             {
                 myWorksheet.Cells[row, 1].Value = product.Sku;
                 myWorksheet.Cells[row, 2].Value = product.Quantity;
