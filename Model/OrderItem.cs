@@ -14,7 +14,5 @@ namespace PavluqueOrderGenerator.Model
         public string Size { get; set; }
         public int Quantity { get; set; }
         public string Code128Text => BarcodeGenerator.Code128.Encode(Sku);
-
-        public ICollection<Order> SavedOrders { get; set; }
     }
 }

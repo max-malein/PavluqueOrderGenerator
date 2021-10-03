@@ -17,9 +17,14 @@ function createRow(button) {
         setRowIndex(newRow, 1 + rIndex)
         button.innerHTML = "-"
 
+        row.parentNode.appendChild(newRow)
         addInputChangeListeners(newRow)
-
-        row.parentNode.append(newRow)
+        copyRowValues(row, newRow)
+        
+        // непонятно почему но значение (.product-name).value = Наименование
+        // вручную его скопирую
+        newRow.querySelector('.product-name').value = row.querySelector('.product-name').value
+        updateSku(newRow)
     }
     else {
         row.remove()
@@ -32,6 +37,20 @@ function createRow(button) {
     }
 }
 
+function copyRowValues(oldRow, newRow) {
+    let sku = oldRow.querySelector('.product-sku').value
+    let skuElement = newRow.querySelector('.product-sku')
+    skuElement.value = sku
+
+    updateRowBasedOnSku(skuElement)
+
+    let sizeElement = newRow.querySelector('.product-size')
+    let index = sizeElement.selectedIndex + 1
+    if (index < sizeElement.options.length) {
+        sizeElement.selectedIndex = index
+    }
+}
+
 function setRowIndex(row, index) {
 
     row.dataset.rowindex = index;
@@ -40,13 +59,20 @@ function setRowIndex(row, index) {
     })
 }
 
-function selectProductName(select) {
+function onProductNameChange(select) {
     let selection = select.options[select.selectedIndex].text
     let sizeElement = select.parentNode.nextElementSibling.getElementsByTagName('select')[0]
+    let row = select.closest('.input-row')
+    let price = row.querySelector('.product-price')
 
     let size = productsPromise.then(sz => {
         sizeArr = sz.filter(o => o.name == selection)[0].sizes
         setSizes(sizeElement, sizeArr)
+    })
+
+    // set price
+    productsPromise.then(prods => {
+        price.value = prods.filter(p => p.name == selection)[0].price
     })
 }
 
@@ -80,11 +106,13 @@ function increaseNameIndexes(row) {
     row.innerHTML = html.replace(replacePattern, row.dataset.rowindex)
 }
 
-
-
-function updateSku(event) {
+function onAnyProductInputChange(event) {
     console.log('inside updateSku event')
     let row = event.currentTarget.closest('.input-row')
+    updateSku(row)
+}
+
+function updateSku(row) {
     let productName = row.querySelector('.product-name').value
     let qty = row.querySelector('.product-quantity').value
     let size = row.querySelector('.product-size').value
@@ -105,32 +133,44 @@ function updateSku(event) {
             sku = product.sku + '-' + size
             price = product.price
         }
-        
+
         skuInput.value = sku
         priceInput.value = price
     })
 }
 
-function onSkuUpdate(event) {
-    let input = event.currentTarget
-    // тип изделия
+function updateRowBasedOnSku(skuElement) {
     const pattern = /(^\d{5})(-(\w*)$)?/m;
-    let match = input.value.match(pattern)
-    if (match != null && match[1]) {
-        console.log(match[1])
-        productsPromise.then(prods => {
-            let product = prods.filter(p => p.sku == match[1])[0]
-            if (product) {
-                let prodInput = input.closest('.input-row').querySelector('.product-name');
-                for (let i = 0; i < prodInput.options.length; i++) {
-                    if (prodInput.options[i].text == product.name) {
-                        prodInput.selectedIndex = i
-                        break
-                    }
+    let match = skuElement.value.match(pattern)
+    if (match != null) {
+        let row = skuElement.closest('.input-row')
+        if (match[1]) {
+            console.log(match[1])
+            productsPromise.then(prods => {
+                let product = prods.filter(p => p.sku == match[1])[0]
+                if (product) {
+                    let prodInput = row.querySelector('.product-name');
+                    prodInput.value = product.name
+                    prodInput.onchange()
+                }
+            })
+        }
+
+        if (match[2]) {
+            let size = match[2].substring(1)
+            let sizeElem = row.querySelector('.product-size')
+            for (option of sizeElem.options) {
+                if (option.text == size) {
+                    sizeElem.value = size
                 }
             }
-        })
+        }
     }
+}
+
+function onSkuUpdate(event) {
+    let input = event.currentTarget
+    updateRowBasedOnSku(input)
 }
 
 
@@ -138,6 +178,6 @@ function addInputChangeListeners(row) {
     row.querySelector('.product-sku').addEventListener('input', onSkuUpdate)
     let elements = row.getElementsByClassName('product-input')
     for (var i = 0; i < elements.length; i++) {
-        elements[i].addEventListener('change', updateSku)
+        elements[i].addEventListener('change', onAnyProductInputChange)
     }
 }

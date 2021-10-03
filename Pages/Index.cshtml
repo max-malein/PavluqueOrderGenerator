@@ -5,14 +5,17 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="display-4">Велком ту зе павлюк ордер генератор!</h1>
 
 <p>
-    <a asp-page="CreateOrder">Create New</a>
+    <a asp-page="CreateOrder">Создать новый заказ</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                Номер заказа
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.SavedOrder[0].DateCreated)
             </th>
@@ -25,6 +28,9 @@
     <tbody>
 @foreach (var item in Model.SavedOrder) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>

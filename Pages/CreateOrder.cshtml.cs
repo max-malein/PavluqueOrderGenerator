@@ -42,7 +42,8 @@ namespace PavluqueOrderGenerator.Pages
             //{
             //    CreateProductDatabase();
             //}
-            Console.WriteLine();
+
+            ViewData["NewOrderNumber"] = context.Orders.Max(o => o.Id) + 1;
         }
 
         private void CreateProductDatabase()
@@ -113,7 +114,7 @@ namespace PavluqueOrderGenerator.Pages
             return new OkResult();
         }
 
-        public IActionResult OnPostStickers()
+        public async Task<IActionResult> OnPostStickersAsync()
         {
             if (!ModelState.IsValid)
                 return Page();
@@ -141,6 +142,7 @@ namespace PavluqueOrderGenerator.Pages
                 {
                     Id = OrderId,
                     DateCreated = DateTime.Now,
+                    LastEdited = DateTime.Now,
                     Orders = Orders.ToList()
                 };
 

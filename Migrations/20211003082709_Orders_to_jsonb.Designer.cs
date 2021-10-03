@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PavluqueOrderGenerator;
@@ -11,9 +12,10 @@ using PavluqueOrderGenerator.Model;
 namespace PavluqueOrderGenerator.Migrations
 {
     [DbContext(typeof(PavluqueContext))]
-    partial class PavluqueContextModelSnapshot : ModelSnapshot
+    [Migration("20211003082709_Orders_to_jsonb")]
+    partial class Orders_to_jsonb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
